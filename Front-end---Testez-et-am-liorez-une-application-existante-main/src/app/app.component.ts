@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavBarreComponent } from './nav-barre/nav-barre.component';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  standalone: true,
   imports: [
-    RouterOutlet
+    NavBarreComponent
   ],
+  templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'etudiant-frontend';
-}
+export class AppComponent {}
+
+/* Injecte dans la class root  */
+
+/* Composant principal ou injecter les autres composants */
