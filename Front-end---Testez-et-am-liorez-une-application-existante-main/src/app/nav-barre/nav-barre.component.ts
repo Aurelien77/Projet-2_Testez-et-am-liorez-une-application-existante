@@ -1,23 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../core/service/auth.service';
 
 @Component({
   selector: 'app-nav-barre',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './nav-barre.component.html',
   styleUrls: ['./nav-barre.component.css']
 })
-export class NavBarreComponent {
+export class NavBarreComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  isTokenValid = false;
 
-  // Navigue vers la page Register
-  goToRegister() {
-    this.router.navigate(['/register']);
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    // S’abonner aux changements de connexion
+    this.authService.loggedIn$.subscribe(valid => this.isTokenValid = valid);
   }
 
-  // Navigue vers la page Login
-  goToLogin() {
+  // Déconnexion
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/']); // revenir à home
+  }
+
+  //  Navigation vers login
+  goToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  //  Navigation vers register
+  goToRegister(): void {
+    this.router.navigate(['/register']);
   }
 
 }

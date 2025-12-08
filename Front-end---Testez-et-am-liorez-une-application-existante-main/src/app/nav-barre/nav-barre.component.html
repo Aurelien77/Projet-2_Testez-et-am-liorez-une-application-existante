@@ -1,4 +1,13 @@
 <div class="container">
-  <button class="btn" (click)="goToRegister()">Créer un utilisateur</button>
-  <button class="btn" (click)="goToLogin()">Se connecter</button>
+  <button class="btn" (click)="goToRegister()">
+    <span class="material-icons">person_add</span> Créer un utilisateur
+  </button>
+
+  <button class="btn" *ngIf="!isTokenValid" (click)="goToLogin()">
+    <span class="material-icons">vpn_key</span> Se connecter
+  </button>
+
+  <button class="btn" *ngIf="isTokenValid" (click)="logout()">
+    <span class="material-icons">logout</span> Se déconnecter
+  </button>
 </div>
