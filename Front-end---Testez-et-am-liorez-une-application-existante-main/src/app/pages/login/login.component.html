@@ -1,0 +1,55 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h2>Connexion</h2>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Message de succès -->
+    <div *ngIf="loginSuccess" class="alert alert-success">
+      ✓ Connexion réussie ! Redirection en cours...
+    </div>
+
+    <div class="form-group">
+      <label for="login">Login</label>
+      <input
+        type="text"
+        id="login"
+        formControlName="login"
+        class="form-control"
+        [class.is-invalid]="submitted && form['login'].errors"
+      />
+      <div *ngIf="submitted && form['login'].errors" class="invalid-feedback">
+        Le login est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mot de passe</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        class="form-control"
+        [class.is-invalid]="submitted && form['password'].errors"
+      />
+      <div
+        *ngIf="submitted && form['password'].errors"
+        class="invalid-feedback"
+      >
+        Le mot de passe est requis
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loginSuccess">
+        {{ loginSuccess ? "Connexion..." : "Se connecter" }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onReset()">
+        Réinitialiser
+      </button>
+    </div>
+  </form>
+</div>
