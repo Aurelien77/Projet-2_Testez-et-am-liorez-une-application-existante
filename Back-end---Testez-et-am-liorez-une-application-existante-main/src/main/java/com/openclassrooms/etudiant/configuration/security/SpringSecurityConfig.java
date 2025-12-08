@@ -45,11 +45,11 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Bean pour CORS compatible Spring Security 6.1+
+    // Bean pour CORS compatible Spring Security 6.1+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // ton frontend Angular
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -68,7 +68,7 @@ public class SpringSecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/register", "/api/login").permitAll()
+                        .requestMatchers("/api/register", "/api/login", "/api/validate").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
                         (request, response, exception) -> {

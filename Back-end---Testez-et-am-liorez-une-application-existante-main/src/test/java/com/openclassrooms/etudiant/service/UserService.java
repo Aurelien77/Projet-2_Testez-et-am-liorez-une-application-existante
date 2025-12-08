@@ -51,11 +51,16 @@ public class UserService {
     }
 
     // ⭐ AJOUTER CETTE MÉTHODE
-    public boolean checkIfUsersExist() {
-        return userRepository.count() > 0;
+    public String checkIfUsersExist() {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            return "Aucun utilisateur trouvé dans la base de données";
+        } else {
+            return "Il y a " + users.size() + " utilisateur(s) dans la base";
+        }
     }
 
-    // ⭐ MÉTHODES UTILES SUPPLÉMENTAIRES (optionnel)
+    // Méthodes utiles supplémentaires (optionnel)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
