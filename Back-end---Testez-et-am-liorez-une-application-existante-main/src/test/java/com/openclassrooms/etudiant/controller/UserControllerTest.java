@@ -99,19 +99,17 @@ public class UserControllerTest {
 
     @Test
     public void registerUserSuccessful() throws Exception {
-        // GIVEN
-        RegisterDTO registerDTO = new RegisterDTO();
-        registerDTO.setFirstName(FIRST_NAME);
-        registerDTO.setLastName(LAST_NAME);
-        registerDTO.setLogin(LOGIN);
-        registerDTO.setPassword(PASSWORD);
+        RegisterDTO dto = new RegisterDTO();
+        dto.setFirstName(FIRST_NAME);
+        dto.setLastName(LAST_NAME);
+        dto.setLogin(LOGIN);
+        dto.setPassword(PASSWORD);
 
-        // WHEN
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
-                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
-                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .content(objectMapper.writeValueAsString(dto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("User created successfully!"));
     }
 }

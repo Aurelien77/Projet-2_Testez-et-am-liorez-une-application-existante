@@ -10,4 +10,8 @@
   <button class="btn" *ngIf="isTokenValid" (click)="logout()">
     <span class="material-icons">logout</span> Se déconnecter
   </button>
+
+  <button class="btn" *ngIf="isTokenValid" (click)="goToHome()">
+    <span class="material-icons">home</span> Liste des utilisateurs
+  </button>
 </div>

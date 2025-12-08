@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../core/service/auth.service'; // ← ton service
+import { Router } from '@angular/router';
+import { AuthService } from '../core/service/auth.service';
+import { UserService } from '../core/service/user.service';
+import { UserResponse } from '../core/models/user-response.model';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +13,45 @@ import { AuthService } from '../core/service/auth.service'; // ← ton service
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private router = inject(Router);
 
   isTokenValid: boolean = false;
-
-  constructor(private authService: AuthService) {}
+  users: UserResponse[] = [];
 
   ngOnInit(): void {
-    //  S’abonner aux changements de connexion
-    this.authService.loggedIn$.subscribe(valid => this.isTokenValid = valid);
+    this.authService.loggedIn$.subscribe(valid => {
+      this.isTokenValid = valid;
+      if (valid) {
+        this.loadUsers();
+      } else {
+        this.users = [];
+      }
+    });
   }
 
+  private loadUsers(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (users: UserResponse[]) => this.users = users,
+      error: (err: any) => console.error('Erreur récupération utilisateurs', err)
+    });
+  }
+
+  editUser(user: UserResponse): void {
+    this.router.navigate(['/edit-user', user.id]);
+  }
+
+  confirmDelete(user: UserResponse): void {
+    const confirmed = window.confirm(`Voulez-vous vraiment supprimer ${user.firstName} ${user.lastName} ?`);
+    if (confirmed) {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          console.log('Utilisateur supprimé');
+          this.loadUsers();
+        },
+        error: (err) => console.error('Erreur suppression utilisateur', err)
+      });
+    }
+  }
 }

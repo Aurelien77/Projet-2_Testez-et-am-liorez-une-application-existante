@@ -20,7 +20,9 @@ export class NavBarreComponent implements OnInit {
     // S’abonner aux changements de connexion
     this.authService.loggedIn$.subscribe(valid => this.isTokenValid = valid);
   }
-
+  goToHome(): void {
+    this.router.navigate(['/']);
+  }
   // Déconnexion
   logout(): void {
     this.authService.logout();

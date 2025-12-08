@@ -59,7 +59,6 @@ public class UserService {
         }
     }
 
-    // Méthodes utiles supplémentaires (optionnel)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -67,4 +66,16 @@ public class UserService {
     public Optional<User> getUserByLogin(String login) {
         return userRepository.findByLogin(login);
     }
+
+    public void deleteUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être null");
+        }
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("Utilisateur introuvable");
+        }
+        userRepository.deleteById(id);
+        log.info("Utilisateur avec id {} supprimé", id);
+    }
+
 }

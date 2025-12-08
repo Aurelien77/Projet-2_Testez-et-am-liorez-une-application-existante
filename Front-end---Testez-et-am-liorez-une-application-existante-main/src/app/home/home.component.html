@@ -1,8 +1,19 @@
 <div class="container" *ngIf="!isTokenValid">
-  🚪Connectez-vous pour plus d'information
+  <h1>🚪 Connectez-vous pour plus d'information</h1>
 </div>
 
 <div class="container" *ngIf="isTokenValid">
-  👋🌍 Vous êtes connecté grâce à la validité de votre token
-  <br />
+  <h2>👋🌍 Vous êtes connecté grâce à la validité de votre token</h2>
+  <br /><br />
+
+  <h3>Liste des utilisateurs :</h3>
+  <ul>
+    <li *ngFor="let user of users">
+      {{ user.firstName }} {{ user.lastName }} ({{ user.login }})
+      <button (click)="editUser(user)" class="btn-edit">Modifier</button>
+      <button (click)="confirmDelete(user)" class="btn-delete">
+        Supprimer
+      </button>
+    </li>
+  </ul>
 </div>

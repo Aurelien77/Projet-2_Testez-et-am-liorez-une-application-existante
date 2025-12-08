@@ -25,10 +25,11 @@ public class UserService {
         Assert.notNull(user, "User must not be null");
         log.info("Registering new user");
 
-        Optional<User> optionalUser = userRepository.findByLogin(user.getLogin());
-        if (optionalUser.isPresent()) {
+        Optional<User> existingUser = userRepository.findByLogin(user.getLogin());
+        if (existingUser.isPresent()) {
             throw new IllegalArgumentException("User with login " + user.getLogin() + " already exists");
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -50,17 +51,19 @@ public class UserService {
         }
     }
 
-    // ⭐ AJOUTER CETTE MÉTHODE
     public boolean checkIfUsersExist() {
         return userRepository.count() > 0;
     }
 
-    // ⭐ MÉTHODES UTILES SUPPLÉMENTAIRES (optionnel)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public Optional<User> getUserByLogin(String login) {
         return userRepository.findByLogin(login);
+    }
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

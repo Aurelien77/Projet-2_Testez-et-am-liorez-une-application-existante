@@ -1,6 +1,12 @@
 <div class="register-container">
   <div class="card m-3">
-    <h5 class="card-header">Registration Form</h5>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <h5 class="card-header">Créer un utilisateur</h5>
     <div class="card-body">
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
