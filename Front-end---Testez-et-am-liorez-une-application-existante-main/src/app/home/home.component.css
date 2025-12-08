@@ -12,3 +12,10 @@
   transform: translate(-50%, -50%); 
   background: none;
 }
+
+.connected-image {
+  margin-top: 20px;
+  width: 150px;   
+  height: auto;
+  border-radius: 10px; 
+}

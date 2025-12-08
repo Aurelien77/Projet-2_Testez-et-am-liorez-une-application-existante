@@ -50,7 +50,6 @@ public class UserService {
         }
     }
 
-    // ⭐ AJOUTER CETTE MÉTHODE
     public String checkIfUsersExist() {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {

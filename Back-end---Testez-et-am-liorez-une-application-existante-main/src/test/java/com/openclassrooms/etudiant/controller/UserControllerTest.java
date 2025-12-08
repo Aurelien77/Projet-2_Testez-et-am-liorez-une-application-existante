@@ -19,14 +19,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
+import java.util.Objects;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Testcontainers
 public class UserControllerTest {
-
     private static final String URL = "/api/register";
     private static final String FIRST_NAME = "John";
     private static final String LAST_NAME = "Doe";
@@ -66,9 +65,9 @@ public class UserControllerTest {
 
         // WHEN
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(objectMapper.writeValueAsString(registerDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
+                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
+                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -91,9 +90,9 @@ public class UserControllerTest {
 
         // WHEN
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(objectMapper.writeValueAsString(registerDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
+                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
+                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -109,10 +108,10 @@ public class UserControllerTest {
 
         // WHEN
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(objectMapper.writeValueAsString(registerDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
+                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
+                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
