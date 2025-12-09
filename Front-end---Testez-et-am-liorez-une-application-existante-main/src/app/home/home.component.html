@@ -9,7 +9,20 @@
   <h3>Liste des utilisateurs :</h3>
   <ul>
     <li *ngFor="let user of users">
-      {{ user.firstName }} {{ user.lastName }} ({{ user.login }})
+      {{ user.firstName }} {{ user.lastName }}
+      <input
+        [type]="user.showLogin ? 'text' : 'password'"
+        [value]="user.login"
+        readonly
+        style="
+          border: none;
+          background: transparent;
+          width: 100px;
+          cursor: pointer;
+        "
+        (click)="toggleLogin(user)"
+        title="Cliquez pour afficher le login"
+      />
       <button (click)="editUser(user)" class="btn-edit">Modifier</button>
       <button (click)="confirmDelete(user)" class="btn-delete">
         Supprimer

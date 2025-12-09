@@ -45,10 +45,11 @@ export class EditUserComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Erreur chargement utilisateur', err);
-        this.errorMessage = 'Impossible de charger les données de l\'utilisateur';
+       /*  this.errorMessage = 'Impossible de charger les données de l\'utilisateur'; */
       }
     });
   }
+  
 
   onSubmit(): void {
     this.errorMessage = '';
@@ -69,7 +70,7 @@ export class EditUserComponent implements OnInit {
       next: () => {
         this.successMessage = 'Utilisateur modifié avec succès !';
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }, 1500);
       },
       error: (err: any) => {
@@ -80,6 +81,6 @@ export class EditUserComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 }

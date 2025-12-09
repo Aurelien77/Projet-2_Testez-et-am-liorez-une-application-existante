@@ -55,12 +55,12 @@ export class LoginComponent implements OnInit {
         this.token = token; 
         localStorage.setItem('token', token);
         this.router.navigate(['']);
-     alert('Token reçu :\n' + token);
+  /*    alert('Token reçu :\n' + token); */
           
       
       },
       error: (err) => {
-        this.errorMessage = 'Échec de la connexion. Vérifiez vos identifiants ou le backend.';
+        this.errorMessage = 'Échec de la connexion. Vérifiez vos identifiants.';
         this.loginSuccess = false;
       }
     });

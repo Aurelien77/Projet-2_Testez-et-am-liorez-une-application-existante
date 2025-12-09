@@ -144,6 +144,9 @@ public class UserController {
     @PutMapping("/api/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDTO updateDTO) {
         try {
+            if (id == null) {
+                throw new IllegalArgumentException("L'ID ne peut pas être null");
+            }
             return userRepository.findById(id)
                     .map(user -> {
                         // Mettre à jour les champs simples

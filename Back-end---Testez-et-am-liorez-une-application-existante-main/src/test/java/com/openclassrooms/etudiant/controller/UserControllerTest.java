@@ -1,6 +1,7 @@
 package com.openclassrooms.etudiant.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.etudiant.config.TestConfig;
 import com.openclassrooms.etudiant.dto.RegisterDTO;
 import com.openclassrooms.etudiant.entities.User;
 import com.openclassrooms.etudiant.repository.UserRepository;
@@ -10,71 +11,70 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import java.util.Objects;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@Testcontainers
-public class UserControllerTest {
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+@SuppressWarnings("null")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
+        "spring.datasource.url=jdbc:h2:mem:testdb;NON_KEYWORDS=USER",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.datasource.username=sa",
+        "spring.datasource.password=",
+        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.docker.compose.enabled=false",
+        "spring.jpa.properties.hibernate.globally_quoted_identifiers=true"
+})
+@AutoConfigureMockMvc(addFilters = false)
+@Import(TestConfig.class)
+class UserControllerTest {
+
     private static final String URL = "/api/register";
     private static final String FIRST_NAME = "John";
     private static final String LAST_NAME = "Doe";
-    private static final String LOGIN = "login";
-    private static final String PASSWORD = "password";
-
-    @Container
-    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest");
+    private static final String LOGIN = "testlogin";
+    private static final String PASSWORD = "TestPassword123!";
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @Autowired
     private MockMvc mockMvc;
 
-    @DynamicPropertySource
-    static void configureTestProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> mySQLContainer.getJdbcUrl());
-        registry.add("spring.datasource.username", () -> mySQLContainer.getUsername());
-        registry.add("spring.datasource.password", () -> mySQLContainer.getPassword());
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-
-    }
-
     @AfterEach
-    public void afterEach() {
+    void afterEach() {
         userRepository.deleteAll();
     }
 
     @Test
-    public void registerUserWithoutRequiredData() throws Exception {
-        // GIVEN
+    void registerUser_WithoutRequiredData_ShouldReturnBadRequest() throws Exception {
+        // Arrange
         RegisterDTO registerDTO = new RegisterDTO();
 
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
-                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
-                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
+        // Act & Assert
+        mockMvc.perform(post(URL)
+                .content(objectMapper.writeValueAsString(registerDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void registerAlreadyExistUser() throws Exception {
-        // GIVEN
+    void registerUser_WithExistingLogin_ShouldReturnBadRequest() throws Exception {
+        // Arrange - Create existing user
         User user = new User();
         user.setFirstName(FIRST_NAME);
         user.setLastName(LAST_NAME);
@@ -82,34 +82,37 @@ public class UserControllerTest {
         user.setPassword(PASSWORD);
         userService.register(user);
 
+        // Try to register with same login
         RegisterDTO registerDTO = new RegisterDTO();
         registerDTO.setFirstName(FIRST_NAME);
         registerDTO.setLastName(LAST_NAME);
         registerDTO.setLogin(LOGIN);
         registerDTO.setPassword(PASSWORD);
 
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(registerDTO)))
-                .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
-                .accept(Objects.requireNonNull(MediaType.APPLICATION_JSON)))
+        // Act & Assert
+        mockMvc.perform(post(URL)
+                .content(objectMapper.writeValueAsString(registerDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void registerUserSuccessful() throws Exception {
+    void registerUser_WithValidData_ShouldReturnCreated() throws Exception {
+        // Arrange
         RegisterDTO dto = new RegisterDTO();
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
         dto.setLogin(LOGIN);
         dto.setPassword(PASSWORD);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(URL)
+        // Act & Assert
+        mockMvc.perform(post(URL)
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("User created successfully!"));
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message").value("User created successfully!"));
     }
 }
