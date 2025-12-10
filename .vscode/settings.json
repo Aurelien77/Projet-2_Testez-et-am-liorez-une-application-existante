@@ -1,3 +1,15 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "maven.terminal.useJavaHome": true,
+    "java.project.sourcePaths": [
+        "src/main/java",
+        "target/generated-sources/annotations"
+    ],
+    "files.exclude": {
+        "**/target": false
+    },
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
 }

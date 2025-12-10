@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Identifiants invalides");
+        body.put("message", "Identifiants invalides envoyé depuis le handler, que la force soit avec toi !");
         body.put("details", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);

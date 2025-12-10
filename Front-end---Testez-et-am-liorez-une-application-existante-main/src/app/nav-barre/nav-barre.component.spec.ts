@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NavBarreComponent } from './nav-barre.component';
+import { AuthService } from '../core/service/auth.service';
 
 describe('NavBarreComponent', () => {
   let component: NavBarreComponent;
@@ -8,9 +9,9 @@ describe('NavBarreComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavBarreComponent]
-    })
-    .compileComponents();
+      imports: [NavBarreComponent, HttpClientTestingModule], 
+      providers: [AuthService], 
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NavBarreComponent);
     component = fixture.componentInstance;

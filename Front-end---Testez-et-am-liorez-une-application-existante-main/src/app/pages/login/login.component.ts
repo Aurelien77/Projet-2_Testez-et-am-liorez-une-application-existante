@@ -60,8 +60,32 @@ export class LoginComponent implements OnInit {
       
       },
       error: (err) => {
-        this.errorMessage = 'Échec de la connexion. Vérifiez vos identifiants.';
-        this.loginSuccess = false;
+      
+  if (err.status === 0) {
+    this.errorMessage = "Le serveur est indisponible. Vérifiez qu'il est démarré.";
+  }
+
+  
+  else if (err.status === 401) {
+    this.errorMessage = "Identifiants incorrects. Veuillez réessayer.";
+  }
+
+ 
+  else if (err.status === 404) {
+    this.errorMessage = "Le service d'authentification est introuvable (404).";
+  }
+
+
+  else if (err.status === 500) {
+    this.errorMessage = "Mauvais login ou mots de passe";
+  }
+
+  
+  else {
+    this.errorMessage = "Une erreur est survenue : " + err.message;
+  }
+
+  this.loginSuccess = false;
       }
     });
   }
